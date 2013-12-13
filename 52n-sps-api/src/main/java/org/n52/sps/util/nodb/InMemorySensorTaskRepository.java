@@ -73,6 +73,14 @@ public class InMemorySensorTaskRepository implements SensorTaskRepository {
         return null;
     }
     
+    public Iterable<String> getSensorTaskIds() {
+    	List<String> taskIds = new ArrayList<String>();
+    	for (SensorTask sensorTask : sensorTasks.values()) {
+    		taskIds.add(sensorTask.getTaskId());
+    	}
+    	return taskIds;
+    }
+    
     public Iterable<String> getSensorTaskIds(String procedure) {
         List<String> taskIds = new ArrayList<String>();
         for (SensorTask sensorTask : sensorTasks.values()) {
@@ -105,6 +113,16 @@ public class InMemorySensorTaskRepository implements SensorTaskRepository {
             return sensorTasks.get(sensorTaskKey);
         }
         
+    }
+    
+    public void updateSensorTask(SensorTask sensorTask) throws InvalidParameterValueException {
+    	SensorTaskKey sensorTaskKey = new SensorTaskKey(sensorTask.getProcedure(), sensorTask.getTaskId());
+    	 if (!sensorTasks.containsKey(sensorTaskKey)) {
+             throw new InvalidParameterValueException("task");
+         } else {
+             sensorTasks.put(sensorTaskKey,sensorTask);
+         }
+
     }
 
     public IdWithPrefixGenerator getIdGenerator() {
@@ -157,5 +175,4 @@ public class InMemorySensorTaskRepository implements SensorTaskRepository {
             return true;
         }
     }
-
 }

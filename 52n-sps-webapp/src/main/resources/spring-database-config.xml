@@ -29,7 +29,10 @@
 
 	<bean id="sensorTaskDatabaseService" class="org.n52.sps.db.SensorTaskStorageService">
 		<property name="sensorTaskDao" ref="sensorTaskDao" />
+		<property name="taskIdGenerator" ref ="taskIdGenerator"/>
 	</bean>
+	<!-- <bean id="taskIdGenerator" class="org.n52.sps.util.UuidWithPrefixGenerator"/> -->
+	<bean id="taskIdGenerator" class="org.n52.sps.util.UuidWithoutPrefixGenerator"/> 
 	
 	<!-- ############################## JDBC MANAGED DATASOURCE ####################################### -->
 

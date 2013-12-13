@@ -37,11 +37,15 @@ public class SensorTaskStorageService implements SensorTaskRepository {
     
     // taskId != native db id
     // TODO inject id generator to make id creation customizable
-    private IdWithPrefixGenerator taskIdGenerator = new UuidWithPrefixGenerator();
+    private IdWithPrefixGenerator taskIdGenerator;
     
     private SensorTaskDao sensorTaskDao;
 
-    public SensorTask createNewSensorTask(String procedure) {
+    public void setTaskIdGenerator(IdWithPrefixGenerator taskIdGenerator) {
+		this.taskIdGenerator = taskIdGenerator;
+	}
+
+	public SensorTask createNewSensorTask(String procedure) {
         String taskId = taskIdGenerator.generatePrefixedId(procedure, "/");
         SensorTask sensorTask = new SensorTask(taskId, procedure);
         sensorTaskDao.saveInstance(sensorTask);
@@ -59,7 +63,13 @@ public class SensorTaskStorageService implements SensorTaskRepository {
     public void removeSensorTask(SensorTask sensorTask) {
         sensorTaskDao.deleteInstance(sensorTask);
     }
-
+    public Iterable<String> getSensorTaskIds() {
+    	 List<String> taskIds = new ArrayList<String>();
+         for (SensorTask sensorTask : sensorTaskDao.getAllInstances()) {
+             taskIds.add(sensorTask.getTaskId());
+         }
+         return taskIds;
+	}
     public Iterable<String> getSensorTaskIds(String procedure) {
         List<String> taskIds = new ArrayList<String>();
         for (SensorTask sensorTask : sensorTaskDao.findByProcedure(procedure)) {
@@ -83,6 +93,10 @@ public class SensorTaskStorageService implements SensorTaskRepository {
         }
         return sensorTask;
     }
+    
+    public void updateSensorTask(SensorTask sensorTask) throws InvalidParameterValueException {
+        sensorTaskDao.updateInstance(sensorTask);
+    }
 
     public long getTaskAmountOf(String procedure) {
         return sensorTaskDao.getCount(procedure);
@@ -95,5 +109,4 @@ public class SensorTaskStorageService implements SensorTaskRepository {
     public void setSensorTaskDao(SensorTaskDao sensorTaskDao) {
         this.sensorTaskDao = sensorTaskDao;
     }
-    
 }

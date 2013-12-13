@@ -74,6 +74,11 @@ public interface SensorTaskRepository {
      * @return access to all sensor task ids found.
      */
     public Iterable<String> getSensorTaskIds(String procedure);
+    
+    /**
+     * @return access to all sensor task ids found.
+     */
+    public Iterable<String> getSensorTaskIds();
 
     /**
      * @param procedure the procedure all sensor tasks shall be retrieved from repository.
@@ -103,5 +108,7 @@ public interface SensorTaskRepository {
     public long getTaskAmountOf(String procedure);
 
     public SensorTask getTask(String taskId);
+    
+    public void updateSensorTask(SensorTask sensorTask) throws InvalidParameterValueException;
 
 }

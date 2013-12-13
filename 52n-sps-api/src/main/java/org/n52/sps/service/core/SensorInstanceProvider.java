@@ -148,7 +148,8 @@ public class SensorInstanceProvider implements InsertSensorOfferingListener {
     public void setSensorTaskRepository(SensorTaskRepository sensorTaskRepository) {
         this.sensorTaskRepository = sensorTaskRepository;
     }
-
+    
+    //TODO Try to use handleInsertSensorConfiguration inside this method to reduce code
     public void handleInsertSensorOffering(InsertSensorOfferingEvent insertSensorOfferingEvent) throws InternalServiceException {
         InsertSensorOfferingDocument insertSensorOfferingDocument = insertSensorOfferingEvent.getInsertSensorOffering();
         InsertSensorOffering insertSensorOffering = insertSensorOfferingDocument.getInsertSensorOffering();
@@ -164,6 +165,18 @@ public class SensorInstanceProvider implements InsertSensorOfferingListener {
             sensorInstances.add(initSensorInstance(sensorConfiguration));
             sensorConfigurationRepository.storeNewSensorConfiguration(sensorConfiguration);
         }
+    }
+    
+    public void handleInsertSensorConfiguration(SensorConfiguration sensorConfiguration) throws InternalServiceException{
+    	if (isSensorExisting(sensorConfiguration.getProcedure(),sensorConfiguration.getSensorPluginType())){
+    		SensorPlugin sensorPlugin = getSensorForProcedure(sensorConfiguration.getProcedure());
+    		sensorPlugin.mergeSensorConfigurations(sensorConfiguration);
+    		sensorConfigurationRepository.saveOrUpdateSensorConfiguration(sensorConfiguration);
+    	}
+    	else {
+    		sensorInstances.add(initSensorInstance(sensorConfiguration));
+    		sensorConfigurationRepository.storeNewSensorConfiguration(sensorConfiguration);
+    	}
     }
 
     private SensorPlugin initSensorInstance(SensorConfiguration sensorConfiguration) throws InternalServiceException {
@@ -235,19 +248,23 @@ public class SensorInstanceProvider implements InsertSensorOfferingListener {
     private boolean isSensorExisting(SensorInstanceData sensorInstanceData) throws IllegalPluginTypeRelationException {
         String procedure = sensorInstanceData.getProcedure().getStringValue();
         String sensorPluginType = sensorInstanceData.getSensorPluginType();
-        if (sensorConfigurationRepository.containsSensorConfiguration(procedure)) {
-            SensorPlugin sensorInstance = getSensorForProcedure(procedure);
-            String existingType = sensorInstance.getSensorPluginType();
-            if (sensorPluginType == null || existingType.equals(sensorPluginType)) {
-                return true;
-            }
-            else {
-                LOGGER.error("Procedure '{}' already exists (for type '{}')", procedure, existingType);
-                throw new IllegalPluginTypeRelationException("Procedure already in use.");
-            }
-        }
-        return false;
+        return isSensorExisting(procedure, sensorPluginType);
     }
+    
+    private boolean isSensorExisting(String procedure, String sensorPluginType) throws IllegalPluginTypeRelationException{
+		if (sensorConfigurationRepository.containsSensorConfiguration(procedure)) {
+			SensorPlugin sensorInstance = getSensorForProcedure(procedure);
+			String existingType = sensorInstance.getSensorPluginType();
+			if (sensorPluginType == null || existingType.equals(sensorPluginType)) {
+				return true;
+			}
+			else {
+				LOGGER.error("Procedure '{}' already exists (for type '{}')", procedure, existingType);
+				throw new IllegalPluginTypeRelationException("Procedure already in use.");
+			}
+		}
+		return false;
+	}	
 
     private List<SensorDescription> createSensorDescriptions(SensorDescriptionData[] sensorDescriptionDataArray) {
         List<SensorDescription> sensorDescriptions = new ArrayList<SensorDescription>();
@@ -350,6 +367,15 @@ public class SensorInstanceProvider implements InsertSensorOfferingListener {
                 LOGGER.warn("Ignore further abstract descriptions, as SPS spec. requires only one!");
             }
         }
+    }
+    
+    public void removeSensorInstance(String procedureId) throws InternalServiceException{
+
+    	SensorPlugin sensorPlugin = getSensorForProcedure(procedureId);
+    	if (sensorPlugin !=null) {
+    		sensorInstances.remove(sensorPlugin);
+    		sensorPlugin = null;
+    	}
     }
 
 }

@@ -1,12 +1,12 @@
 /**
- * Copyright (C) 2013
- * by Instituto Tecnológico de Galicia
+ * Copyright (C) 2012
+ * by 52 North Initiative for Geospatial Open Source Software GmbH
  *
- * Contact: Carlos Giraldo
- * 52 Instituto Tecnológico de Galicia
- * PO.CO.MA.CO. Sector i, Portal 5 15190, A Coruña
- * A Coruña, Spain
- * cgiraldo@5itg.es
+ * Contact: Andreas Wytzisk
+ * 52 North Initiative for Geospatial Open Source Software GmbH
+ * Martin-Luther-King-Weg 24
+ * 48155 Muenster, Germany
+ * info@52north.org
  *
  * This program is free software; you can redistribute and/or modify it under
  * the terms of the GNU General Public License version 2 as published by the
@@ -21,27 +21,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA or
  * visit the Free Software Foundation web page, http://www.fsf.org.
  */
-
 package org.n52.sps.service.rest;
 
 import java.util.List;
 
-import org.n52.ows.exception.OwsException;
-import org.n52.ows.exception.OwsExceptionReport;
-import org.n52.sps.sensor.model.Task;
+import org.n52.sps.sensor.model.TaskingConfiguration;
+import org.n52.sps.service.InternalServiceException;
 
-public interface TaskService {
 
-    public List<String> getTaskIds();
+public interface TaskingConfigurationService {
+      
     
-    public List<String> getTaskIds(String procedure);
+    public void insertTaskingConfiguration(TaskingConfiguration taskingConfiguration) throws InternalServiceException;
     
-    public Task getTask(String taskId);
+    public List<TaskingConfiguration> getTaskingConfigurations();
     
-    public void updateTask(Task task) throws OwsException;
+    public TaskingConfiguration getTaskingConfiguration(String procedureId);
     
-    public void deleteTask(String task_id) throws OwsException;
+    public void removeTaskingConfiguration(String procedureId) throws InternalServiceException;
     
-    public Task submitTask(Task task) throws OwsException, OwsExceptionReport;
-
 }

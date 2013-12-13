@@ -31,24 +31,26 @@
 		<module>52n-sps-api-xml</module>
 		<module>52n-sps-hibernate</module>
 		<module>52n-sps-testplugin</module>
+		<module>52n-sps-genericplugin</module>
 		<module>52n-sps-rest</module>
 	</modules>
-	
-    <properties>
-        <service.path>52n-sps-webapp</service.path>
-        <timestamp>${maven.build.timestamp}</timestamp>
-        <sps.webapp.name>${project.artifactId}-${project.version}</sps.webapp.name>
-        <test.config.logger.level>INFO</test.config.logger.level>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
-        
-        <org.springframework.version>3.2.0.RELEASE</org.springframework.version>
-        <oxf.common.xml.version>1.1.4</oxf.common.xml.version>
-        <aspectj.version>1.6.12</aspectj.version>
-        <jackson.version>2.2.2</jackson.version>
-        <oxf.version>1.12</oxf.version>
-    </properties>
-	
+
+	<properties>
+		<service.path>52n-sps-webapp</service.path>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<sps.webapp.name>${project.artifactId}-${project.version}</sps.webapp.name>
+		<test.config.logger.level>INFO</test.config.logger.level>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+
+		<org.springframework.version>3.2.0.RELEASE</org.springframework.version>
+		<oxf.common.xml.version>1.1.4</oxf.common.xml.version>
+		<aspectj.version>1.6.12</aspectj.version>
+		<jackson.version>2.3.0</jackson.version>
+		<jersey.version>2.3</jersey.version>
+		<oxf.version>1.12</oxf.version>
+	</properties>
+
 	<scm>
 		<connection>scm:svn:https://svn.52north.org/svn/swe/main/SPS/Services/trunk</connection>
 		<developerConnection>scm:svn:https://svn.52north.org/svn/swe/main/SPS/Services/trunk</developerConnection>
@@ -97,6 +99,11 @@
 			<dependency>
 				<groupId>org.n52.sensorweb</groupId>
 				<artifactId>52n-sps-testplugin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.n52.sensorweb</groupId>
+				<artifactId>52n-sps-genericplugin</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -207,16 +214,58 @@
 				<version>2.5</version>
 				<scope>provided</scope>
 			</dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.module</groupId>
-                <artifactId>jackson-module-jsonSchema</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
+			<!-- ITG SWECOMMON json binding library -->
+			<dependency>
+				<groupId>es.itg.sensorweb</groupId>
+				<artifactId>itg-swecommon</artifactId>
+				<version>1.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>es.itg.sensorweb</groupId>
+				<artifactId>helper-swecommon-service</artifactId>
+				<version>1.0.1-SNAPSHOT</version>
+			</dependency>
+			<!-- JACKSON DEPENDENCIES -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				<artifactId>jackson-jaxrs-json-provider</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<!-- Jersey SPRING integration DEPENDENCIES -->
+			<dependency>
+				<groupId>org.glassfish.jersey.ext</groupId>
+				<artifactId>jersey-spring3</artifactId>
+				<version>${jersey.version}</version>
+				<exclusions>
+					<exclusion>
+						<!-- jcl-over-slf4j is used instead -->
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-core</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-beans</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-web</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.containers</groupId>
+				<artifactId>jersey-container-servlet</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjtools</artifactId>

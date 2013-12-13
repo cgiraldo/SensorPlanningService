@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!--############################################################ Place all 
+		available SPS operators. Provider will be injected ############################################################ -->
+	<!-- REST Resources BEANS -->
+	<context:component-scan base-package="org.n52.sps.service.rest.resources" />
+	<!--SweCommon Helper Services BEANS -->
+	<context:component-scan base-package="es.itg.sensorweb.services.helpers" />
+	<!-- Task and TaskingConfiguration Helper Services Beans -->
+	<context:component-scan base-package="org.n52.sps.util.convert" />
+	
+	<bean id="taskingConfigurationService" class="org.n52.sps.service.rest.TaskingConfigurationServiceImpl">
+	<property name="sensorInstanceProvider" ref="sensorInstanceProvider"/>
+	<property name="sensorConfigurationRepository" ref="sensorConfigurationDatabaseService"/>
+	</bean>
+	<bean id="taskService" class="org.n52.sps.service.rest.TaskServiceImpl">
+	<property name="sensorTaskRepository" ref="sensorTaskDatabaseService"/>
+	<property name="sensorPlanningService" ref="service"/>
+	</bean>
+		
+</beans>

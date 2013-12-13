@@ -61,16 +61,15 @@ public class HibernateSensorTaskDao extends HibernateDaoSupport implements Senso
 
     public void deleteInstance(SensorTask instance) {
         LOGGER.debug("deleteInstance({})", instance);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
-
+        getCurrentSession().delete(instance);
     }
 
     public SensorTask findBy(String procedure, String taskId) {
         LOGGER.debug("findBy({}, {})", procedure, taskId);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
-
+        Query query = getCurrentSession().createQuery("from SensorTask as st where st.taskId = :taskId and st.procedure = :procedure");
+        query.setParameter("taskId", taskId);
+        query.setParameter("procedure", procedure);
+        return (SensorTask) query.uniqueResult();
     }
 
     public Iterable<SensorTask> findByTaskId(String taskId) {
