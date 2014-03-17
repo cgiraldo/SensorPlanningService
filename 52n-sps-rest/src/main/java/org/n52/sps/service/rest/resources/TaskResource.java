@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -55,27 +56,34 @@ public class TaskResource{
 	@Autowired    
 	protected TaskService taskService;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(TaskResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TaskResource.class);
 
-    @GET
-	public Response getTasks(@Context UriInfo uriInfo) {
+	@GET
+	public Response getTasks(@Context UriInfo uriInfo, @QueryParam("process") String process) {
 		List<URI> taskIds = new ArrayList<URI>();
-		for (String taskId:taskService.getTaskIds()){
-			taskIds.add(setPrefix(uriInfo.getAbsolutePath().toString(),taskId));
+		if (process!=null){
+			for (String taskId:taskService.getTaskIds(process)){
+				taskIds.add(setPrefix(uriInfo.getAbsolutePath().toString(),taskId));				
+			}
+		}
+		else{
+			for (String taskId:taskService.getTaskIds()){
+				taskIds.add(setPrefix(uriInfo.getAbsolutePath().toString(),taskId));
+			}
 		}
 		return Response.ok(taskIds).build();
 	}
-    
-    @GET
+
+	@GET
 	@Path("/{taskId}")
 	public Response getTask(@PathParam("taskId") String taskId) {
-    	Task task = taskService.getTask(taskId);
-    	if (task!=null){
-    		return Response.ok(task).build();	
-    	}
-    	else {
-    		return Response.status(Status.NOT_FOUND).entity("The task "+taskId+" does not exist in the server.").build();
-    	}
+		Task task = taskService.getTask(taskId);
+		if (task!=null){
+			return Response.ok(task).build();	
+		}
+		else {
+			return Response.status(Status.NOT_FOUND).entity("The task "+taskId+" does not exist in the server.").build();
+		}
 	}
 
 	@POST
@@ -85,21 +93,21 @@ public class TaskResource{
 			return Response.created(
 					setPrefix(uriInfo.getAbsolutePath().toString(),createdTask.getId()))
 					.entity(createdTask).build();
-			
+
 		} catch (OwsException e) {
 			return Response.status(e.getHttpStatusCode()).entity(e.getExceptionTexts()).build();
 		} catch (OwsExceptionReport e) {
 			return Response.serverError().entity(e.getMessage()+e.getStackTrace()).build();
 		}
 	}
-	
+
 	@Path("/{id}")
 	@PUT
 	@Consumes("application/json")
 	public Response updateTask(@PathParam("id") String task_id,Task task) {
 		try{
 			task.setId(task_id);
-		    taskService.updateTask(task);
+			taskService.updateTask(task);
 			return Response.ok().build();
 		}
 		catch (OwsException e) {
@@ -108,13 +116,13 @@ public class TaskResource{
 			return Response.status(e.getHttpStatusCode()).entity(e.getExceptionTexts()).build();
 		} 
 	}
-	
+
 	@Path("/{id}")
 	@DELETE
 	@Produces("application/json")
 	public Response deleteTask(@PathParam("id") String task_id) {
 		try{
-		    taskService.deleteTask(task_id);
+			taskService.deleteTask(task_id);
 			return Response.ok().build();
 		}
 		catch (OwsException e) {
@@ -123,19 +131,19 @@ public class TaskResource{
 			return Response.status(e.getHttpStatusCode()).entity(e.getExceptionTexts()).build();
 		} 
 	}
-	
+
 	private URI setPrefix(String prefix,String resourceId){
 		String resourceURI;
 		try {
-		// We add a backslash in case the last char of the prefix it is not
-		if (prefix.length() > 0 && prefix.charAt(prefix.length()-1)=='/') {
+			// We add a backslash in case the last char of the prefix it is not
+			if (prefix.length() > 0 && prefix.charAt(prefix.length()-1)=='/') {
 				resourceURI = prefix+URLEncoder.encode(resourceId,"UTF-8");		}
-		else{
-			resourceURI = prefix+"/"+URLEncoder.encode(resourceId,"UTF-8");
-		}
-		URI uri = URI.create(resourceURI);
-		LOGGER.debug(resourceURI);
-		return uri;
+			else{
+				resourceURI = prefix+"/"+URLEncoder.encode(resourceId,"UTF-8");
+			}
+			URI uri = URI.create(resourceURI);
+			LOGGER.debug(resourceURI);
+			return uri;
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

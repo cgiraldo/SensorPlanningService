@@ -160,6 +160,20 @@
 				<groupId>com.google.code.maven-svn-revision-number-plugin</groupId>
 				<artifactId>svn-revision-number-maven-plugin</artifactId>
 			</plugin>
+                        <plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<configuration>
+					<port>9191</port>
+					<scanIntervalSeconds>1</scanIntervalSeconds>
+					<reload>automatic</reload> 
+     <loginServices>
+            <loginService implementation="org.eclipse.jetty.security.HashLoginService">
+              <name>52°North SPS Administration Interface.</name>
+            </loginService>
+          </loginServices>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

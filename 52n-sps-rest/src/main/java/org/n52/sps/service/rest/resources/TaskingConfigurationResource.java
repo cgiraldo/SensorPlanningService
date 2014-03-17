@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Component
 @Consumes("application/json")
 @Produces("application/json")
-@Path("/procedures/")
+@Path("/processes/")
 
 /**
  * Componente Rest para gestionar los sensores registrados en el módulo de tasking.

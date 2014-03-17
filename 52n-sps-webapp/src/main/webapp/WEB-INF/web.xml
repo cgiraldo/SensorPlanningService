@@ -86,7 +86,7 @@
 	</security-constraint>
 
 	<login-config>
-		<realm-name>>52°North SPS Administration Interface.</realm-name>
+		<realm-name>52°North SPS Administration Interface.</realm-name>
 		<auth-method>BASIC</auth-method>
 	</login-config>
 
