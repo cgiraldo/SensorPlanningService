@@ -7,8 +7,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>52n-sps-rest</artifactId>
-	<name>ITG contribution to 52North SPS REST API</name>
-	<description>SPS API module.</description>
+	<name>Rest API for SPS</name>
 	<packaging>jar</packaging>
 	<dependencies>
 		<!-- ### MODULE DEPENDENCIES ### -->

@@ -24,6 +24,11 @@ public class TaskingConfigurationHelperService {
 	
 	@Autowired
 	private AbstractDataComponentHelperService swecommonHelper;
+	
+	public void setSwecommonHelper(
+			AbstractDataComponentHelperService swecommonHelper) {
+		this.swecommonHelper = swecommonHelper;
+	}
 
 	// Convert from simplified model to SWE XML
 	public SensorConfiguration getSensorConfiguration(TaskingConfiguration taskingConfiguration) throws XmlException{

@@ -9,6 +9,7 @@ import net.opengis.sps.x20.SubmitResponseDocument;
 import net.opengis.sps.x20.SubmitType;
 import net.opengis.sps.x20.TaskingRequestType.TaskingParameters;
 import net.opengis.swe.x20.TextEncodingDocument;
+import net.opengis.swe.x20.TextEncodingType;
 import net.opengis.swe.x20.TextType;
 
 import org.apache.xmlbeans.XmlCursor;
@@ -34,11 +35,11 @@ public class TaskHelperService {
 		TaskingParameters taskingParameters = submit.addNewTaskingParameters();
 		taskingParameters.addNewParameterData();
 		TextEncodingDocument textEncodingDoc = TextEncodingDocument.Factory.newInstance();
-		textEncodingDoc.addNewTextEncoding().setTokenSeparator(",");
-		textEncodingDoc.getTextEncoding().setBlockSeparator("@@");
+		textEncodingDoc.addNewTextEncoding().setTokenSeparator(task.getTokenSeparator());
+		textEncodingDoc.getTextEncoding().setBlockSeparator(task.getBlockSeparator());
 		taskingParameters.getParameterData().addNewEncoding().set(textEncodingDoc);
 		// Setting the parameters values
-		String parameters = task.getStatus().getParameters();
+		String parameters = task.getParameters();
 
 		TextType textType = TextType.Factory.newInstance();
 		textType.setValue(parameters);
@@ -65,7 +66,10 @@ public class TaskHelperService {
 			}
 		}
 		if (statusReport.getTaskingParameters() !=null){
-			task.getStatus().setParameters(statusReport.getTaskingParameters().getParameterData().getValues().newCursor().getTextValue());
+			TextEncodingType textEncoding = (TextEncodingType) statusReport.getTaskingParameters().getParameterData().getEncoding().getAbstractEncoding();
+			task.setBlockSeparator(textEncoding.getBlockSeparator());
+			task.setTokenSeparator(textEncoding.getTokenSeparator());
+			task.setParameters(statusReport.getTaskingParameters().getParameterData().getValues().newCursor().getTextValue());
 		}
 		return task;
 	}
@@ -102,7 +106,10 @@ public class TaskHelperService {
 		task.getStatus().setUpdateTime(sensorTask.getUpdateTime());
 		task.getStatus().setEstimatedToC(sensorTask.getEstimatedToC());
 		if (sensorTask.getParameterData()!=null){
-			task.getStatus().setParameters(sensorTask.getParameterData().getValues().newCursor().getTextValue());
+			TextEncodingType textEncoding = (TextEncodingType) sensorTask.getParameterData().getEncoding().getAbstractEncoding();
+			task.setBlockSeparator(textEncoding.getBlockSeparator());
+			task.setTokenSeparator(textEncoding.getTokenSeparator());
+			task.setParameters(sensorTask.getParameterData().getValues().newCursor().getTextValue());
 		}
 		if (sensorTask.getStatusMessages()!= null){
 			for (String statusMessage:sensorTask.getStatusMessages()){

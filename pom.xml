@@ -218,12 +218,12 @@
 			<dependency>
 				<groupId>es.itg.sensorweb</groupId>
 				<artifactId>itg-swecommon</artifactId>
-				<version>1.0.1-SNAPSHOT</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>es.itg.sensorweb</groupId>
 				<artifactId>helper-swecommon-service</artifactId>
-				<version>1.0.1-SNAPSHOT</version>
+				<version>1.0.2</version>
 			</dependency>
 			<!-- JACKSON DEPENDENCIES -->
 			<dependency>
@@ -528,6 +528,29 @@
 				<org.n52.database.username>postgres</org.n52.database.username>
 				<org.n52.database.password>postgres</org.n52.database.password>
 				<org.n52.hibernate.hbm2ddl.auto>create</org.n52.hibernate.hbm2ddl.auto>
+			</properties>
+		</profile>
+		<profile>
+			<id>env-prod</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<!-- EXAMPLE CONFIG PROPERTIES FOLLOW. TO SEPARATE CONFIGURATION FROM 
+					PROJECT, COPY build-example.properties to ${user.home}/build.properties CUSTOMIZE 
+					PROPERTIES AND TRIGGER MAVEN BUILD WITH `mvn install -Denv=dev'. -->
+				<sps.external.base.url>http://localhost:8080/${sps.webapp.name}/</sps.external.base.url>
+				<sps.external.dcp.operation.url>${sps.external.base.url}/sps</sps.external.dcp.operation.url>
+				<sps.external.admin.extension.url>${sps.external.base.url}/admin</sps.external.admin.extension.url>
+
+				<config.logger.fileappender.filepath>${catalina.base:-.}/logs</config.logger.fileappender.filepath>
+				<config.logger.level>INFO</config.logger.level>
+				<config.logger.consoleappender.level>INFO</config.logger.consoleappender.level>
+				<config.logger.fileappender.level>WARN</config.logger.fileappender.level>
+
+				<org.n52.database.username>postgres</org.n52.database.username>
+				<org.n52.database.password>postgres</org.n52.database.password>
+				<org.n52.hibernate.hbm2ddl.auto>validate</org.n52.hibernate.hbm2ddl.auto>
 			</properties>
 		</profile>
 

@@ -1,0 +1,10 @@
+We need to install in the maven local repo the ITG-Sensorweb-Framework (through mvn install)
+
+Then in SensorPlanningService we compile (through mvn install).
+
+Then, in the 52n-sps-webapp folder we run jetty on port 9595:
+
+mvn -Djetty.port=9595 jetty:run
+
+The file SPS_REST_Jetty_Local.json is a POSTMAN Collection to test the REST API.
+POSTMAN is a google chrome app to test REST APIs.

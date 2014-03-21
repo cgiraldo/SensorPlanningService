@@ -9,6 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Task {
 	String id;
 	String procedureId;
+	String blockSeparator;
+	String tokenSeparator;
+	String parameters; 
 	Status status;
 
 	public Task(){
@@ -31,6 +34,30 @@ public class Task {
 		this.procedureId = procedureId;
 	}
 	
+	public String getBlockSeparator() {
+		return blockSeparator;
+	}
+
+	public void setBlockSeparator(String blockSeparator) {
+		this.blockSeparator = blockSeparator;
+	}
+
+	public String getTokenSeparator() {
+		return tokenSeparator;
+	}
+
+	public void setTokenSeparator(String tokenSeparator) {
+		this.tokenSeparator = tokenSeparator;
+	}
+
+	public String getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(String parameters) {
+		this.parameters = parameters;
+	}
+
 	public Status getStatus() {
 		return status;
 	}
@@ -46,7 +73,7 @@ public class Task {
 		String taskStatus;
 		ArrayList<String> statusMessages;
 		Calendar updateTime;
-		String parameters; 
+		
 		public Status(){
 			statusMessages = new ArrayList<String>();
 		}
@@ -99,13 +126,6 @@ public class Task {
 		}
 		public void setUpdateTime(Calendar updateTime) {
 			this.updateTime = updateTime;
-		}
-
-		public String getParameters() {
-			return parameters;
-		}
-		public void setParameters(String parameters) {
-			this.parameters = parameters;
 		}
 	}
 }
